@@ -15,7 +15,7 @@ export declare class BoundedQueue<T> implements AsyncIterable<T> {
     private readonly waitingProducers;
     private closed;
     constructor(capacity: number);
-    private tryPushIntrenal;
+    private tryPushInternal;
     /** * Attempts to push a value into the queue without waiting.
      * Returns true if successful, false if the queue is full or closed.
      */

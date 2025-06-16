@@ -24,4 +24,37 @@ describe("launchEventLoop", () => {
     controller.abort();
     await tg.wait();
   });
+
+  it("abort long running handler", async () => {
+    const boundedqueue = new BoundedQueue<number>(10);
+    const results: number[] = [];
+    const controller = new AbortController();
+
+    [1].forEach((v) => boundedqueue.tryPush(v));
+    boundedqueue.close();
+
+    const tg = new TaskGroup();
+    const start = performance.now();
+    const interval = 8;
+    launchEventLoop(
+      controller.signal,
+      tg,
+      boundedqueue,
+      async (_, e) => {
+        await new Promise((resolve) =>
+          setTimeout(() => {
+            results.push(e);
+            resolve(null);
+          }, 1000)
+        );
+      },
+      interval,
+      true
+    );
+    await tg.wait();
+    const end = performance.now();
+    const delta = end - start;
+    console.log(delta, start, end);
+    expect(delta).lessThan(interval + 2);
+  });
 });

@@ -27,7 +27,7 @@ export class BoundedQueue<T> implements AsyncIterable<T> {
     if (capacity <= 0) throw errZeroCapacity;
   }
 
-  private tryPushIntrenal = (value: T): boolean => {
+  private tryPushInternal = (value: T): boolean => {
     if (this.waitingConsumers.length > 0) {
       const resolve = this.waitingConsumers.shift()!;
       resolve({ value, done: false });
@@ -47,7 +47,7 @@ export class BoundedQueue<T> implements AsyncIterable<T> {
    */
   tryPush = (value: T): boolean => {
     if (this.closed) return false;
-    return this.tryPushIntrenal(value);
+    return this.tryPushInternal(value);
   };
 
   /** * Pushes a value into the queue, waiting if necessary until space is available.
@@ -57,7 +57,7 @@ export class BoundedQueue<T> implements AsyncIterable<T> {
     while (true) {
       if (this.closed) return false;
 
-      if (this.tryPushIntrenal(value)) {
+      if (this.tryPushInternal(value)) {
         return true;
       }
 

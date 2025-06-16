@@ -24,7 +24,7 @@ class BoundedQueue {
         this.waitingConsumers = [];
         this.waitingProducers = [];
         this.closed = false;
-        this.tryPushIntrenal = (value) => {
+        this.tryPushInternal = (value) => {
             if (this.waitingConsumers.length > 0) {
                 const resolve = this.waitingConsumers.shift();
                 resolve({ value, done: false });
@@ -42,7 +42,7 @@ class BoundedQueue {
         this.tryPush = (value) => {
             if (this.closed)
                 return false;
-            return this.tryPushIntrenal(value);
+            return this.tryPushInternal(value);
         };
         /** * Pushes a value into the queue, waiting if necessary until space is available.
          * Returns true if successful, false if the queue is closed.
@@ -51,7 +51,7 @@ class BoundedQueue {
             while (true) {
                 if (this.closed)
                     return false;
-                if (this.tryPushIntrenal(value)) {
+                if (this.tryPushInternal(value)) {
                     return true;
                 }
                 await new Promise((resolve) => {

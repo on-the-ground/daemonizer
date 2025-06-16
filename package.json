@@ -1,6 +1,6 @@
 {
   "name": "@on-the-ground/daemonizer",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "A minimal async control flow framework for browser and Node.js daemons.",
   "keywords": [
     "async",
@@ -27,5 +27,12 @@
   "devDependencies": {
     "prettier": "^3.5.3",
     "vitest": "^3.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/on-the-ground/daemonizer"
+  },
+  "bugs": {
+    "url": "https://github.com/on-the-ground/daemonizer/issues"
   }
 }
