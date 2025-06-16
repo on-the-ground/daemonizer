@@ -1,4 +1,4 @@
-import { ErrAborted, withAbort } from "./abort";
+import { ErrAborted, withAbort, withTimeout } from "./abort";
 import { MacroTaskYielder } from "./macro_task_yielder";
 import { TaskGroup } from "./task_group";
 
@@ -17,8 +17,8 @@ export async function launchEventLoop<T>(
   eventStream: AsyncIterable<T>,
   handle: (signal: AbortSignal, event: T) => Promise<void>
 ): Promise<void> {
-  const yieldScheduler = new MacroTaskYielder();
-  const abortable = withAbort(signal);
+  const timeout = 8; // ms
+  const yieldScheduler = new MacroTaskYielder(timeout);
   const iterator = eventStream[Symbol.asyncIterator]();
 
   taskGroup.add(1);
@@ -27,7 +27,7 @@ export async function launchEventLoop<T>(
     while (true) {
       let result: IteratorResult<T>;
       try {
-        result = await abortable(iterator.next());
+        result = await withAbort(iterator.next(), signal);
       } catch (err) {
         break;
       }
@@ -35,9 +35,9 @@ export async function launchEventLoop<T>(
       if (result.done) break;
 
       try {
-        await abortable(handle(signal, result.value));
+        await withTimeout((sig) => handle(sig, result.value), timeout, signal);
       } catch (err) {
-        if (err instanceof ErrAborted) {
+        if (err.reason instanceof ErrAborted) {
           break;
         }
       }
