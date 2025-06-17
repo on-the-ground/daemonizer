@@ -42,10 +42,14 @@ Open your browser console and watch `tick:` messages stream in real time!
       import {
         launchEventLoop,
         TaskGroup,
-      } from "https://esm.sh/@on-the-ground/daemonizer";
+        Daemon,
+        withAbort,
+      } from "https://esm.sh/@on-the-ground/daemonizer@latest";
 
-      const controller = new AbortController();
-      const daemon = new Daemon()(controller.signal, async (_signal, event) => {
+      ///////////// Daemon Example /////////////
+
+      let controller = new AbortController();
+      const daemon = new Daemon(controller.signal, async (_signal, event) => {
         await new Promise((r) => setTimeout(r, 1000));
         console.log("tick:", event);
       });
@@ -59,6 +63,13 @@ Open your browser console and watch `tick:` messages stream in real time!
       console.log("waiting the daemon down");
       await daemon.close();
       console.log("the daemon got down");
+
+      // Results:
+      // waiting the daemon down
+      // tick: 1
+      // tick: 2
+      // the daemon got down
+      // tick: 3 <- long running task, use strictInterval to abort it
     </script>
   </body>
 </html>
