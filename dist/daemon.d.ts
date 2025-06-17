@@ -1,6 +1,6 @@
 import { BoundedQueue } from "./bounded_queue";
 import { TaskGroup } from "./task_group";
-/** * EventHandler is a utility class that manages an event loop processing events
+/** * Daemon is a utility class that manages an event loop processing events
  * from a bounded queue. It allows pushing events to the queue and handles them
  * asynchronously using a provided handler function.
  * It supports graceful shutdown and ensures that all events are processed before closing.
@@ -11,7 +11,7 @@ import { TaskGroup } from "./task_group";
  * Promise that resolves when the event is handled.
  * @param bufferSize - The size of the bounded queue buffer. Defaults to 10.
  */
-export declare class EventHandler<E> {
+export declare class Daemon<E> {
     readonly tg: TaskGroup;
     readonly eventStream: BoundedQueue<E>;
     constructor(signal: AbortSignal, handleEvent: (signal: AbortSignal, event: E) => Promise<void>, bufferSize?: number);

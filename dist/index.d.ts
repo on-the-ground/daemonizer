@@ -68,7 +68,7 @@ declare class TaskGroup {
     wait(): Promise<void>;
 }
 
-/** * EventHandler is a utility class that manages an event loop processing events
+/** * Daemon is a utility class that manages an event loop processing events
  * from a bounded queue. It allows pushing events to the queue and handles them
  * asynchronously using a provided handler function.
  * It supports graceful shutdown and ensures that all events are processed before closing.
@@ -79,7 +79,7 @@ declare class TaskGroup {
  * Promise that resolves when the event is handled.
  * @param bufferSize - The size of the bounded queue buffer. Defaults to 10.
  */
-declare class EventHandler<E> {
+declare class Daemon<E> {
     readonly tg: TaskGroup;
     readonly eventStream: BoundedQueue<E>;
     constructor(signal: AbortSignal, handleEvent: (signal: AbortSignal, event: E) => Promise<void>, bufferSize?: number);
@@ -126,4 +126,4 @@ declare class MacroTaskYielder {
     yieldByInterval: () => Promise<void>;
 }
 
-export { BoundedQueue, ErrZeroCapacity, EventHandler, MacroTaskYielder, TaskGroup, abortError, errZeroCapacity, launchEventLoop, timeoutError, withAbort, withTimeout };
+export { BoundedQueue, Daemon, ErrZeroCapacity, MacroTaskYielder, TaskGroup, abortError, errZeroCapacity, launchEventLoop, timeoutError, withAbort, withTimeout };

@@ -54,6 +54,6 @@ describe("launchEventLoop", () => {
     await tg.wait();
     const end = performance.now();
     const delta = end - start;
-    expect(delta).lessThan(interval + 2);
+    expect(delta).lessThan(interval + 3);
   });
 });

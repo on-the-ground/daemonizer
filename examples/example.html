@@ -2,14 +2,32 @@
 <html>
   <body>
     Open your browser's DevTools and go to the Console tab.<br />
-    <script type="module">
-      import {
-        launchEventLoop,
-        TaskGroup,
-      } from "https://esm.sh/@on-the-ground/daemonizer";
+    <pre style="font-size: 16px"><code class="language-javascript">
 
-      const controller = new AbortController();
-      const signal = controller.signal;
+      ///////////// Daemon Example /////////////
+
+      let controller = new AbortController();
+      const daemon = new Daemon(controller.signal, async (_signal, event) => {
+        await new Promise((r) => setTimeout(r, 1000));
+        console.log("tick:", event);
+      });
+
+      for (let i = 1; i <= 5; i++) {
+        await daemon.pushEvent(i);
+      }
+
+      setTimeout(() => controller.abort(), 3000);
+
+      console.log("waiting the daemon down");
+      await daemon.close();
+      console.log("the daemon got down");
+
+      await new Promise((r) => setTimeout(r, 1000));
+
+
+      //////////// Utility Example ////////////
+
+      controller = new AbortController();
       const taskGroup = new TaskGroup();
 
       async function* stream() {
@@ -19,17 +37,79 @@
         }
       }
 
-      launchEventLoop(signal, taskGroup, stream(), async (_sig, e) => {
-        console.log("tick:", e);
-      });
+      launchEventLoop(
+        controller.signal,
+        taskGroup,
+        stream(),
+        async (_sig, e) => {
+          console.log("tick:", e);
+        }
+      );
 
       setTimeout(() => {
         controller.abort();
       }, 5000);
 
-      console.log("waiting the daemon down");
+      console.log("waiting the utility daemon down");
       await taskGroup.wait();
+      console.log("the utility daemon got down");
+    </code></pre>
+    <script type="module">
+      import {
+        launchEventLoop,
+        TaskGroup,
+        Daemon,
+        withAbort,
+      } from "https://esm.sh/@on-the-ground/daemonizer@latest";
+
+      ///////////// Daemon Example /////////////
+
+      let controller = new AbortController();
+      const daemon = new Daemon(controller.signal, async (_signal, event) => {
+        await new Promise((r) => setTimeout(r, 1000));
+        console.log("tick:", event);
+      });
+
+      for (let i = 1; i <= 5; i++) {
+        await daemon.pushEvent(i);
+      }
+
+      setTimeout(() => controller.abort(), 3000);
+
+      console.log("waiting the daemon down");
+      await daemon.close();
       console.log("the daemon got down");
+
+      await new Promise((r) => setTimeout(r, 1000));
+
+      //////////// Utility Example ////////////
+
+      controller = new AbortController();
+      const taskGroup = new TaskGroup();
+
+      async function* stream() {
+        while (true) {
+          await new Promise((r) => setTimeout(r, 500));
+          yield Math.random();
+        }
+      }
+
+      launchEventLoop(
+        controller.signal,
+        taskGroup,
+        stream(),
+        async (_sig, e) => {
+          console.log("tick:", e);
+        }
+      );
+
+      setTimeout(() => {
+        controller.abort();
+      }, 5000);
+
+      console.log("waiting the utility daemon down");
+      await taskGroup.wait();
+      console.log("the utility daemon got down");
     </script>
   </body>
 </html>

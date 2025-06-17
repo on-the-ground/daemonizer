@@ -38,7 +38,7 @@ export async function launchEventLoop<T>(
       try {
         result = await withAbort(iterator.next(), signal);
       } catch (err) {
-        if (err === abortError) break;
+        if (err instanceof DOMException) break;
         throw err;
       }
 
@@ -55,7 +55,7 @@ export async function launchEventLoop<T>(
       } catch (err) {
         if (err === timeoutError) {
           // continue
-        } else if (err === abortError) {
+        } else if (err instanceof DOMException) {
           break loop; // Break the loop iff it is aborted from outside
         } else {
           throw err;

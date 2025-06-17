@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
-import { EventHandler } from "../src/event_handler";
+import { Daemon } from "../src/daemon";
 
-describe("EventHandler", () => {
+describe("Daemon", () => {
   it("processes events correctly and shuts down", async () => {
     const handled: number[] = [];
     const abortController = new AbortController();
 
-    const handler = new EventHandler<number>(
+    const handler = new Daemon<number>(
       abortController.signal,
       async (_signal, event) => {
         handled.push(event);
@@ -28,7 +28,7 @@ describe("EventHandler", () => {
 
   it("stops accepting new events after close", async () => {
     const abortController = new AbortController();
-    const handler = new EventHandler<number>(
+    const handler = new Daemon<number>(
       abortController.signal,
       async () => {},
       1
