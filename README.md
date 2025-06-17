@@ -77,7 +77,35 @@ Open your browser console and watch `tick:` messages stream in real time!
 
 ---
 
-## 🧩 API Overview
+## 🧠 API Overview
+
+### `Daemon` – The Core Abstraction
+
+```ts
+import { Daemon } from "@on-the-ground/daemonizer";
+
+const daemon = new Daemon(signal, async (msg) => {
+  // Your background task handler
+  console.log("received:", msg);
+});
+
+// Push a task into the daemon's queue
+await daemon.push({ type: "log", content: "hello" });
+
+// Gracefully shut down when you're done
+await daemon.close();
+```
+
+#### ✅ Features
+
+- Runs background tasks with structured concurrency
+- Backpressure-safe via internal bounded queue
+- Auto-shuts down when `AbortSignal` is aborted
+- One-liner setup: no boilerplate, no ceremony
+
+---
+
+### 🧰 Low-level Tools (also exported)
 
 ### `launchEventLoop(signal, taskGroup, events, handler)`
 
