@@ -26,6 +26,3 @@ Thumbs.db
 .env
 *.local
 
-# Optional: build config
-rollup.config.js
-tsconfig*.tsbuildinfo

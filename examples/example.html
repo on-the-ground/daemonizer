@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <body>
+    Open your browser's DevTools and go to the Console tab.<br />
+    <script type="module">
+      import {
+        launchEventLoop,
+        TaskGroup,
+      } from "https://esm.sh/@on-the-ground/daemonizer";
+
+      const controller = new AbortController();
+      const signal = controller.signal;
+      const taskGroup = new TaskGroup();
+
+      async function* stream() {
+        while (true) {
+          await new Promise((r) => setTimeout(r, 500));
+          yield Math.random();
+        }
+      }
+
+      launchEventLoop(signal, taskGroup, stream(), async (_sig, e) => {
+        console.log("tick:", e);
+      });
+
+      setTimeout(() => {
+        controller.abort();
+      }, 5000);
+
+      console.log("waiting the daemon down");
+      await taskGroup.wait();
+      console.log("the daemon got down");
+    </script>
+  </body>
+</html>

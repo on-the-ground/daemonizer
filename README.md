@@ -26,29 +26,62 @@ npm install daemonizer
 
 ---
 
-## 📦 Usage
+## 🧪 Try in Your Browser
 
-```ts
-import { launchEventLoop, TaskGroup } from "daemonizer";
+Run the daemon in your browser with no setup:  
+👉 [examples/example.html](./examples/example.html)
 
-const abortController = new AbortController();
-const taskGroup = new TaskGroup();
+Open your browser console and watch `tick:` messages stream in real time!
 
-const stream = someAsyncEventSource();
+```html
+<!-- examples/example.html -->
+<!DOCTYPE html>
+<html>
+  <body>
+    <script type="module">
+      import {
+        launchEventLoop,
+        TaskGroup,
+      } from "https://esm.sh/@on-the-ground/daemonizer";
 
-launchEventLoop(
-  abortController.signal,
-  taskGroup,
-  stream,
-  async (_signal, event) => {
-    // handle your event
-    console.log("event:", event);
-  }
-);
+      const controller = new AbortController();
+      const signal = controller.signal;
+      const taskGroup = new TaskGroup();
 
-...
+      async function* stream() {
+        while (true) {
+          await new Promise((r) => setTimeout(r, 500));
+          yield Math.random();
+        }
+      }
 
-await taskGroup.wait();
+      launchEventLoop(signal, taskGroup, stream(), async (_sig, e) => {
+        console.log("tick:", e);
+      });
+
+      setTimeout(() => {
+        controller.abort();
+      }, 5000);
+
+      console.log("waiting the daemon down");
+      await taskGroup.wait();
+      console.log("the daemon got down");
+    </script>
+  </body>
+</html>
+
+<!-- Results:
+waiting the daemon down
+test.html:22 tick: 0.17133613821350968
+test.html:22 tick: 0.1096581440474449
+test.html:22 tick: 0.9839765784196945
+test.html:22 tick: 0.015502678232037548
+test.html:22 tick: 0.12016593237300965
+test.html:22 tick: 0.4231255582511755
+test.html:22 tick: 0.3327403253579475
+test.html:22 tick: 0.48606744644617483
+test.html:22 tick: 0.637584393131401
+test.html:31 the daemon got down -->
 ```
 
 ---
