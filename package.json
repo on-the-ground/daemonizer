@@ -1,6 +1,6 @@
 {
   "name": "@on-the-ground/daemonizer",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "A minimal async control flow framework for browser and Node.js daemons.",
   "keywords": [
     "async",
@@ -13,7 +13,15 @@
   "author": "Joohyung Park <joohyung-park@on-the-ground.org>",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist/index.mjs",
+    "dist/index.cjs",
+    "dist/index.d.ts",
+    "dist/abort.d.ts",
+    "dist/bounded_queue.d.ts",
+    "dist/event_loop.d.ts",
+    "dist/event_handler.d.ts",
+    "dist/macro_task_yielder.d.ts",
+    "dist/task_group.d.ts"
   ],
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
