@@ -39,12 +39,7 @@ Open your browser console and watch `tick:` messages stream in real time!
 <html>
   <body>
     <script type="module">
-      import {
-        launchEventLoop,
-        TaskGroup,
-        Daemon,
-        withAbort,
-      } from "https://esm.sh/@on-the-ground/daemonizer@latest";
+      import { Daemon } from "https://esm.sh/@on-the-ground/daemonizer@latest";
 
       ///////////// Daemon Example /////////////
 
@@ -64,6 +59,9 @@ Open your browser console and watch `tick:` messages stream in real time!
       await daemon.close();
       console.log("the daemon got down");
 
+      const daemon = new Daemon(signal, handler);
+      await daemon.push(msg);
+      await daemon.close();
       // Results:
       // waiting the daemon down
       // tick: 1

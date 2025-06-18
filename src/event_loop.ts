@@ -1,4 +1,4 @@
-import { abortError, timeoutError, withAbort, withTimeout } from "./abort";
+import { timeoutError, withAbort, withTimeout } from "./abort";
 import { MacroTaskYielder } from "./macro_task_yielder";
 import { TaskGroup } from "./task_group";
 

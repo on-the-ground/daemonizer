@@ -1,4 +1,18 @@
-const abortError = new DOMException("Aborted", "AbortError");
+/**
+ * A standard `DOMException` used to signal that an operation was aborted due to a timeout.
+ *
+ * This error uses the `"AbortError"` name so it integrates cleanly with `AbortSignal`-based cancellation.
+ * It is returned by `withTimeout()` when the specified timeout duration elapses.
+ *
+ * @example
+ * try {
+ *   await withTimeout(doSomething, 1000);
+ * } catch (err) {
+ *   if (err === timeoutError) {
+ *     console.warn("Operation timed out");
+ *   }
+ * }
+ */
 const timeoutError = new DOMException("Timeout", "AbortError");
 /** * Wraps a promise with an AbortSignal to allow it to be aborted.
  * If the signal is already aborted, it rejects immediately.
@@ -21,6 +35,25 @@ const withAbort = (promise, signal) => {
         signal.removeEventListener("abort", onAbort);
     });
 };
+/**
+ * Runs an async operation with a timeout and optional external AbortSignal.
+ *
+ * If the operation does not complete within the given timeout,
+ * it is aborted with a `timeoutError`. If an external `AbortSignal` is provided
+ * and it fires first, the operation is also aborted with that signal's reason.
+ *
+ * Internally, it merges the external signal (if provided) with an internal timeout-based signal.
+ * Then it wraps the callback execution with `withAbort()` to ensure proper cancellation handling.
+ *
+ * @template T - The type of the resolved value.
+ * @param callback - An async function that accepts an `AbortSignal` and returns a `Promise<T>`.
+ *                   This function is expected to respect the signal and abort early if triggered.
+ * @param timeout - Timeout in milliseconds after which the operation will be aborted.
+ * @param externalSignal - Optional `AbortSignal` to combine with the timeout signal.
+ *                         Abortion from either will cancel the operation.
+ * @returns A `Promise<T>` that resolves if the callback completes within time,
+ *          or rejects with `timeoutError` or the external signal's reason.
+ */
 const withTimeout = async (callback, timeout, externalSignal) => {
     const timeoutController = new AbortController();
     const timeoutId = setTimeout(() => {
@@ -336,5 +369,5 @@ class Daemon {
     }
 }
 
-export { BoundedQueue, Daemon, ErrZeroCapacity, MacroTaskYielder, TaskGroup, abortError, errZeroCapacity, launchEventLoop, timeoutError, withAbort, withTimeout };
+export { BoundedQueue, Daemon, ErrZeroCapacity, MacroTaskYielder, TaskGroup, errZeroCapacity, launchEventLoop, timeoutError, withAbort, withTimeout };
 //# sourceMappingURL=index.mjs.map
