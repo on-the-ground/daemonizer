@@ -369,5 +369,5 @@ class Daemon {
     }
 }
 
-export { BoundedQueue, Daemon, ErrZeroCapacity, MacroTaskYielder, TaskGroup, errZeroCapacity, launchEventLoop, timeoutError, withAbort, withTimeout };
+export { BoundedQueue, Daemon, ErrZeroCapacity, MacroTaskYielder, TaskGroup, errZeroCapacity, launchEventLoop, mergeAbortSignals, timeoutError, withAbort, withTimeout };
 //# sourceMappingURL=index.mjs.map

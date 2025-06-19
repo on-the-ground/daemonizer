@@ -42,6 +42,7 @@ declare const withAbort: <T>(promise: Promise<T>, signal?: AbortSignal) => Promi
  *          or rejects with `timeoutError` or the external signal's reason.
  */
 declare const withTimeout: <T>(callback: (signal: AbortSignal) => Promise<T>, timeout: number, externalSignal?: AbortSignal) => Promise<T>;
+declare function mergeAbortSignals(signals: AbortSignal[]): AbortSignal;
 
 declare class ErrZeroCapacity extends Error {
     constructor();
@@ -166,4 +167,4 @@ declare class MacroTaskYielder {
     yieldByInterval: () => Promise<void>;
 }
 
-export { BoundedQueue, Daemon, ErrZeroCapacity, MacroTaskYielder, TaskGroup, errZeroCapacity, launchEventLoop, timeoutError, withAbort, withTimeout };
+export { BoundedQueue, Daemon, ErrZeroCapacity, MacroTaskYielder, TaskGroup, errZeroCapacity, launchEventLoop, mergeAbortSignals, timeoutError, withAbort, withTimeout };

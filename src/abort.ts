@@ -80,7 +80,7 @@ export const withTimeout = async <T>(
   }
 };
 
-function mergeAbortSignals(signals: AbortSignal[]): AbortSignal {
+export function mergeAbortSignals(signals: AbortSignal[]): AbortSignal {
   const controller = new AbortController();
 
   const onAbort = () => {

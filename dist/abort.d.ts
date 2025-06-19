@@ -42,3 +42,4 @@ export declare const withAbort: <T>(promise: Promise<T>, signal?: AbortSignal) =
  *          or rejects with `timeoutError` or the external signal's reason.
  */
 export declare const withTimeout: <T>(callback: (signal: AbortSignal) => Promise<T>, timeout: number, externalSignal?: AbortSignal) => Promise<T>;
+export declare function mergeAbortSignals(signals: AbortSignal[]): AbortSignal;

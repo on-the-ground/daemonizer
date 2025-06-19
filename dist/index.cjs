@@ -378,6 +378,7 @@ exports.MacroTaskYielder = MacroTaskYielder;
 exports.TaskGroup = TaskGroup;
 exports.errZeroCapacity = errZeroCapacity;
 exports.launchEventLoop = launchEventLoop;
+exports.mergeAbortSignals = mergeAbortSignals;
 exports.timeoutError = timeoutError;
 exports.withAbort = withAbort;
 exports.withTimeout = withTimeout;
