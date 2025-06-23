@@ -1,6 +1,6 @@
 {
   "name": "@on-the-ground/daemonizer",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "A minimal async control flow framework for browser and Node.js daemons.",
   "keywords": [
     "daemon",
@@ -16,13 +16,7 @@
   "files": [
     "dist/index.mjs",
     "dist/index.cjs",
-    "dist/index.d.ts",
-    "dist/abort.d.ts",
-    "dist/bounded_queue.d.ts",
-    "dist/event_loop.d.ts",
-    "dist/daemon.d.ts",
-    "dist/macro_task_yielder.d.ts",
-    "dist/task_group.d.ts"
+    "dist/index.d.ts"
   ],
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -43,12 +37,12 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "prettier": "^3.5.3",
-    "rollup": "^4.43.0",
+    "@rollup/plugin-typescript": "^12.1.3",
+    "prettier": "^3.6.0",
+    "rollup": "^4.44.0",
     "rollup-plugin-dts": "^6.2.1",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.3"
+    "vitest": "^3.2.4"
   },
   "repository": {
     "type": "git",
