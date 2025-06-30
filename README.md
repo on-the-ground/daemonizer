@@ -59,9 +59,6 @@ Open your browser console and watch `tick:` messages stream in real time!
       await daemon.close();
       console.log("the daemon got down");
 
-      const daemon = new Daemon(signal, handler);
-      await daemon.push(msg);
-      await daemon.close();
       // Results:
       // waiting the daemon down
       // tick: 1
@@ -88,7 +85,7 @@ const daemon = new Daemon(signal, async (msg) => {
 });
 
 // Push a task into the daemon's queue
-await daemon.push({ type: "log", content: "hello" });
+await daemon.pushEvent({ type: "log", content: "hello" });
 
 // Gracefully shut down when you're done
 await daemon.close();
