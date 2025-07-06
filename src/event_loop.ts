@@ -1,4 +1,10 @@
-import { timeoutError, withAbort, withTimeout } from "./abort";
+import {
+  signalFrom,
+  SignalSource,
+  timeoutError,
+  withAbort,
+  withTimeout,
+} from "./abort";
 import { MacroTaskYielder } from "./macro_task_yielder";
 import { TaskGroup } from "./task_group";
 
@@ -20,10 +26,10 @@ import { TaskGroup } from "./task_group";
  *   but yielding still happens at the interval. Defaults to false.
  */
 export async function launchEventLoop<T>(
-  signal: AbortSignal,
+  sigSrc: SignalSource,
   taskGroup: TaskGroup,
   eventStream: AsyncIterable<T>,
-  handleEvent: (signal: AbortSignal, event: T) => Promise<void>,
+  handleEvent: (signalSource: SignalSource, event: T) => Promise<void>,
   loopIntervalMs: number = 8,
   strictInterval: boolean = false
 ): Promise<void> {
@@ -36,9 +42,9 @@ export async function launchEventLoop<T>(
     loop: while (true) {
       let result: IteratorResult<T>;
       try {
-        result = await withAbort(iterator.next(), signal);
+        result = await withAbort(iterator.next(), signalFrom(sigSrc));
       } catch (err) {
-        if (err instanceof DOMException) break;
+        if (err instanceof DOMException && err.name === "AbortError") break;
         throw err;
       }
 
@@ -47,15 +53,15 @@ export async function launchEventLoop<T>(
       try {
         await (strictInterval
           ? withTimeout(
-              (sig) => handleEvent(sig, result.value),
+              (sigSrc) => handleEvent(sigSrc, result.value),
               loopIntervalMs,
-              signal
+              sigSrc
             )
-          : withAbort(handleEvent(signal, result.value), signal));
+          : withAbort(handleEvent(sigSrc, result.value), signalFrom(sigSrc)));
       } catch (err) {
         if (err === timeoutError) {
           // continue
-        } else if (err instanceof DOMException) {
+        } else if (err instanceof DOMException && err.name === "AbortError") {
           break loop; // Break the loop iff it is aborted from outside
         } else {
           throw err;

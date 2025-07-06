@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { timeoutError, withAbort, withTimeout } from "../src/abort";
+import { signalFrom, timeoutError, withAbort, withTimeout } from "../src/abort";
 
 const customException = new DOMException("haha", "haha");
 
@@ -29,7 +29,7 @@ describe("withAbort", () => {
 describe("withTimeout", () => {
   it("should resolve before timeout", async () => {
     const result = await withTimeout(async (signal) => {
-      await sleep(50, signal);
+      await sleep(50, signalFrom(signal));
       return "success";
     }, 100);
     expect(result).toBe("success");
@@ -38,7 +38,7 @@ describe("withTimeout", () => {
   it("should reject after timeout", async () => {
     try {
       await withTimeout(async (signal) => {
-        await sleep(100, signal);
+        await sleep(100, signalFrom(signal));
         return "fail";
       }, 50);
       throw new Error("should not reach here");
