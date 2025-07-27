@@ -2,6 +2,7 @@ import { launchEventLoop } from "./event_loop";
 import { BoundedQueue } from "./bounded_queue";
 import { TaskGroup } from "./task_group";
 import { isSignalSource, SignalSource } from "./abort";
+import { nanoid } from "nanoid";
 
 /** * Daemon is a utility class that manages an event loop processing events
  * from a bounded queue. It allows pushing events to the queue and handles them
@@ -22,6 +23,7 @@ import { isSignalSource, SignalSource } from "./abort";
  *   but yielding still happens at the interval. Defaults to false.
  */
 export class Daemon<E, S extends SignalSource> {
+  readonly id = nanoid();
   readonly tg: TaskGroup;
   readonly eventStream: BoundedQueue<E>;
   constructor(
