@@ -25,11 +25,11 @@ import { TaskGroup } from "./task_group";
  *   `loopIntervalMs`, otherwise it is aborted. If false, handlers may take longer
  *   but yielding still happens at the interval. Defaults to false.
  */
-export async function launchEventLoop<T>(
-  sigSrc: SignalSource,
+export async function launchEventLoop<T, S extends SignalSource>(
+  sigSrc: S,
   taskGroup: TaskGroup,
   eventStream: AsyncIterable<T>,
-  handleEvent: (signalSource: SignalSource, event: T) => Promise<void>,
+  handleEvent: (signalSource: S, event: T) => Promise<void>,
   loopIntervalMs: number = 8,
   strictInterval: boolean = false
 ): Promise<void> {

@@ -32,19 +32,14 @@ export const SIGNAL_KEY = Symbol("abort-signal");
  */
 export type SignalSource = AbortSignal | { [SIGNAL_KEY]: AbortSignal };
 
-/**
- * Ensures that the given input is a valid `SignalSource`.
- *
- * If the input is neither an `AbortSignal` nor an object containing a valid embedded signal under `SIGNAL_KEY`,
- * a `TypeError` is thrown.
- *
- * @param sigSrc - The input to validate as a `SignalSource`.
- * @returns The validated `SignalSource`.
- * @throws {TypeError} If the input is not a valid signal or signal-carrying object.
- */
-export function assertSignalSource(sigSrc: any): SignalSource {
-  if (isSignalSource(sigSrc)) return sigSrc;
-  throw new TypeError("Invalid abort signal source");
+export function isSignalSource(sigSrc: unknown): sigSrc is SignalSource {
+  return (
+    sigSrc instanceof AbortSignal ||
+    (typeof sigSrc === "object" &&
+      sigSrc !== null &&
+      SIGNAL_KEY in sigSrc &&
+      (sigSrc as any)[SIGNAL_KEY] instanceof AbortSignal)
+  );
 }
 
 /**
@@ -180,14 +175,4 @@ function mergeAbortSignals(signals: AbortSignal[]): AbortSignal {
   }
 
   return controller.signal;
-}
-
-function isSignalSource(sigSrc: unknown): sigSrc is SignalSource {
-  if (sigSrc instanceof AbortSignal) return true;
-  return (
-    typeof sigSrc === "object" &&
-    sigSrc !== null &&
-    SIGNAL_KEY in sigSrc &&
-    (sigSrc as any)[SIGNAL_KEY] instanceof AbortSignal
-  );
 }

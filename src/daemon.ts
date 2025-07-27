@@ -1,7 +1,7 @@
 import { launchEventLoop } from "./event_loop";
 import { BoundedQueue } from "./bounded_queue";
 import { TaskGroup } from "./task_group";
-import { assertSignalSource, SignalSource } from "./abort";
+import { isSignalSource, SignalSource } from "./abort";
 
 /** * Daemon is a utility class that manages an event loop processing events
  * from a bounded queue. It allows pushing events to the queue and handles them
@@ -21,22 +21,23 @@ import { assertSignalSource, SignalSource } from "./abort";
  *   `loopIntervalMs`, otherwise it is aborted. If false, handlers may take longer
  *   but yielding still happens at the interval. Defaults to false.
  */
-export class Daemon<E> {
+export class Daemon<E, S extends SignalSource> {
   readonly tg: TaskGroup;
   readonly eventStream: BoundedQueue<E>;
   constructor(
-    signalSource: SignalSource,
-    handleEvent: (signalSource: SignalSource, event: E) => Promise<void>,
+    signalSource: S,
+    handleEvent: (signalSource: S, event: E) => Promise<void>,
     bufferSize: number = 10,
     loopIntervalMs: number = 8,
     strictInterval: boolean = false
   ) {
+    if (!isSignalSource(signalSource)) throw "invalid signalSource";
     const tg = new TaskGroup();
     const eventStream = new BoundedQueue<E>(bufferSize);
     // launchEventLoop is intentionally fire-and-forget.
     // The lifecycle is tracked via the provided TaskGroup.
     launchEventLoop(
-      assertSignalSource(signalSource),
+      signalSource,
       tg,
       eventStream,
       handleEvent,
