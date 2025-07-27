@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "@jest/globals";
 import { Daemon } from "../src/daemon";
 
 describe("Daemon", () => {
@@ -6,11 +6,15 @@ describe("Daemon", () => {
     const handled: number[] = [];
     const controller = new AbortController();
 
-    const handleFn = async (_signal, event: number) => {
+    const handleFn = async (_signal: AbortSignal, event: number) => {
       handled.push(event);
     };
 
-    const daemon = new Daemon<number>(controller.signal, handleFn, 3);
+    const daemon = new Daemon<number, AbortSignal>(
+      controller.signal,
+      handleFn,
+      3
+    );
 
     await daemon.pushEvent(1);
     await daemon.pushEvent(2);
@@ -26,7 +30,7 @@ describe("Daemon", () => {
 
   it("stops accepting new events after close", async () => {
     const abortController = new AbortController();
-    const daemon = new Daemon<number>(
+    const daemon = new Daemon<number, AbortSignal>(
       abortController.signal,
       async () => {},
       1

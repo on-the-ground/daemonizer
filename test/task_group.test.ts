@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "@jest/globals";
 import { TaskGroup } from "../src/task_group";
 
 describe("TaskGroup", () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "@jest/globals";
 import { launchEventLoop } from "../src/event_loop";
 import { BoundedQueue } from "../src/bounded_queue";
 import { TaskGroup } from "../src/task_group";
@@ -54,6 +54,6 @@ describe("launchEventLoop", () => {
     await tg.wait();
     const end = performance.now();
     const delta = end - start;
-    expect(delta).lessThan(interval + 3);
+    expect(delta).toBeLessThan(interval + 3);
   });
 });

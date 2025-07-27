@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "@jest/globals";
 import { signalFrom, timeoutError, withAbort, withTimeout } from "../src/abort";
 
 const customException = new DOMException("haha", "haha");

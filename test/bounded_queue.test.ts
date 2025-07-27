@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "@jest/globals";
 import { BoundedQueue, errZeroCapacity } from "../src/bounded_queue";
 
 describe("BoundedQueue", () => {

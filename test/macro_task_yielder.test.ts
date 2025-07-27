@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "@jest/globals";
 import { MacroTaskYielder } from "../src/macro_task_yielder";
 
 describe("MacroTaskYielder", () => {
